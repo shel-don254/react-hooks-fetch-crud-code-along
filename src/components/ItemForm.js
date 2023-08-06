@@ -1,37 +1,36 @@
 import React, { useState } from "react";
+import ItemForm from "./ItemForm";
+import Filter from "./Filter";
+import Item from "./Item";
 
-function ItemForm() {
-  const [name, setName] = useState("");
-  const [category, setCategory] = useState("Produce");
+function ShoppingList() {
+  const [selectedCategory, setSelectedCategory] = useState("All");
+  const [items, setItems] = useState([]);
+
+  function handleCategoryChange(category) {
+    setSelectedCategory(category);
+  }
+
+  const itemsToDisplay = items.filter((item) => {
+    if (selectedCategory === "All") return true;
+
+    return item.category === selectedCategory;
+  });
 
   return (
-    <form className="NewItem">
-      <label>
-        Name:
-        <input
-          type="text"
-          name="name"
-          value={name}
-          onChange={(e) => setName(e.target.value)}
-        />
-      </label>
-
-      <label>
-        Category:
-        <select
-          name="category"
-          value={category}
-          onChange={(e) => setCategory(e.target.value)}
-        >
-          <option value="Produce">Produce</option>
-          <option value="Dairy">Dairy</option>
-          <option value="Dessert">Dessert</option>
-        </select>
-      </label>
-
-      <button type="submit">Add to List</button>
-    </form>
+    <div className="ShoppingList">
+      <ItemForm />
+      <Filter
+        category={selectedCategory}
+        onCategoryChange={handleCategoryChange}
+      />
+      <ul className="Items">
+        {itemsToDisplay.map((item) => (
+          <Item key={item.id} item={item} />
+        ))}
+      </ul>
+    </div>
   );
 }
 
-export default ItemForm;
+export default ShoppingList;
